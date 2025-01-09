@@ -15,4 +15,5 @@ export interface AccordionItemProps {
   isOpen: boolean;
   onToggle: (id: number) => void;
   onDelete?: (id: number) => void;
+  onUpdate?: (user: User) => void;
 }

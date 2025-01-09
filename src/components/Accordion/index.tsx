@@ -1,18 +1,19 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa";
-import { AccordionItemProps } from "../../types";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
 import { calculateAge } from "../../utils/getBirthDate";
 import DeleteModal from "../Modal";
+import { RxCrossCircled } from "react-icons/rx";
+import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import Avatar from '../../assets/images/avatar.png';
+import { AccordionItemProps } from "../../types";
 
-const AccordionItem: React.FC<AccordionItemProps> = ({
-  user,
-  isOpen,
-  onToggle,
-  onDelete,
-}) => {
+const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, onDelete, onUpdate }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedUser, setEditedUser] = useState(user);
+  const [fullName, setFullName] = useState(`${user.first} ${user.last}`);
 
   const handleDelete = () => {
     setShowDeleteModal(true);
@@ -23,20 +24,69 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     setShowDeleteModal(false);
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+    setFullName(`${editedUser.first} ${editedUser.last}`);
+  };
+
+  const handleSave = () => {
+    const [first, ...lastParts] = fullName.trim().split(' ');
+    const last = lastParts.join(' ');
+    
+    const updatedUser = {
+      ...editedUser,
+      first: first || '',
+      last: last || ''
+    };
+    
+    onUpdate?.(updatedUser);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setEditedUser(user);
+    setFullName(`${user.first} ${user.last}`);
+    setIsEditing(false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    if (name === 'fullName') {
+      setFullName(value);
+    } else {
+      setEditedUser(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
+  };
+
   return (
     <>
       <div className="w-full border rounded-lg overflow-hidden">
         <div className="flex items-center p-4 bg-white">
           <figure className="w-12 h-12 rounded-full overflow-hidden">
             <img
-              src={user.picture}
+              src={user.picture ? user.picture : Avatar}
               alt={user.first}
               className="w-full h-full rounded-full object-cover"
             />
           </figure>
-          <h4 className="flex-grow mx-4 font-bold capitalize">
-            {user.first} {user.last}
-          </h4>
+          {isEditing ? (
+            <div className="flex-grow mx-4">
+              <input
+                name="fullName"
+                value={fullName}
+                onChange={handleChange}
+                className="w-full px-2 py-1 border rounded"
+                placeholder="Full Name"
+              />
+            </div>
+          ) : (
+            <h4 className="flex-grow mx-4 font-bold capitalize">
+              {user.first} {user.last}
+            </h4>
+          )}
           <button
             onClick={() => onToggle(user.id)}
             className={`p-2 transition-transform duration-300 ${
@@ -59,35 +109,90 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             <li className="basis-1/3">
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">age</span>
-                <span>{calculateAge(user.dob)}</span>
+                {isEditing ? (
+                  <input
+                    type="date"
+                    name="dob"
+                    value={editedUser.dob}
+                    onChange={handleChange}
+                    className="px-2 py-1 border rounded"
+                  />
+                ) : (
+                  <span>{`${calculateAge(user.dob)} Years`}</span>
+                )}
               </div>
             </li>
             <li className="basis-1/3">
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">gender</span>
-                <span className="capitalize">{user.gender}</span>
+                {isEditing ? (
+                  <select
+                    name="gender"
+                    value={editedUser.gender}
+                    onChange={handleChange}
+                    className="px-2 py-1 border rounded"
+                  >
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                ) : (
+                  <span className="capitalize">{user.gender}</span>
+                )}
               </div>
             </li>
             <li className="basis-1/3">
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">country</span>
-                <span className="capitalize">{user.country}</span>
+                {isEditing ? (
+                  <input
+                    name="country"
+                    value={editedUser.country}
+                    onChange={handleChange}
+                    className="px-2 py-1 border rounded"
+                  />
+                ) : (
+                  <span className="capitalize">{user.country}</span>
+                )}
               </div>
             </li>
           </ul>
 
           <div>
             <span className="text-[#6e6e71] capitalize">description</span>
-            <p className="mt-2">{user.description}</p>
+            {isEditing ? (
+              <textarea
+                name="description"
+                value={editedUser.description}
+                onChange={handleChange}
+                className="w-full mt-2 px-2 py-1 border rounded"
+                rows={3}
+              />
+            ) : (
+              <p className="mt-2">{user.description}</p>
+            )}
           </div>
 
           <div className="flex justify-end items-center mt-5">
-            <button className="mr-5" onClick={handleDelete}>
-              <RiDeleteBin6Line color={"#ff2d00"} size={25} />
-            </button>
-            <button>
-              <FiEdit2 color={"#0075ff"} size={25} />
-            </button>
+            {isEditing ? (
+              <>
+                <button className="mr-5" onClick={handleCancel}>
+                  <RxCrossCircled color={"#ff2d00"} size={25} />
+                </button>
+                <button onClick={handleSave}>
+                  <IoCheckmarkCircleOutline color={"#00a854"} size={25} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="mr-5" onClick={handleDelete}>
+                  <RiDeleteBin6Line color={"#ff2d00"} size={25} />
+                </button>
+                <button onClick={handleEdit}>
+                  <FiEdit2 color={"#0075ff"} size={25} />
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -100,4 +205,5 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     </>
   );
 };
+
 export default AccordionItem;
