@@ -10,9 +10,19 @@ const ListView = () => {
   });
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [openAccordionId, setOpenAccordionId] = useState<string | number | null>(null);
+  const [openAccordionId, setOpenAccordionId] = useState<(string | number)[]>([]);
+  const [isAnyItemEditing, setIsAnyItemEditing] = useState(false);
   
-  const handleToggle = (userId: number) => setOpenAccordionId(openAccordionId === userId ? null : userId);
+  // const handleToggle = (userId: number) => setOpenAccordionId(openAccordionId === userId ? null : userId);
+  const handleToggle = (id: string | number) => {
+    if (!isAnyItemEditing) {
+      setOpenAccordionId(prev => 
+        prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+      );
+    }
+  };
+
+  const handleEditingChange = (isEditing: boolean) => setIsAnyItemEditing(isEditing)
 
   const handleDelete = (userId: number) => {
     // Handle the deletion of the user
@@ -71,9 +81,10 @@ const ListView = () => {
               <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
                 <AccordionItem
                   user={user}
-                  isOpen={openAccordionId === user.id}
+                  isOpen={openAccordionId.includes(user.id)}
                   onToggle={handleToggle}
                   onDelete={handleDelete}
+                  onEditingChange={handleEditingChange}
                 />
               </li>
             ))

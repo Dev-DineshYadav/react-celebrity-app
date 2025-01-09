@@ -9,7 +9,15 @@ import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import Avatar from '../../assets/images/avatar.png';
 import { AccordionItemProps } from "../../types";
 
-const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, onDelete, onUpdate }) => {
+const AccordionItem: React.FC<AccordionItemProps> = ({ 
+  user, 
+  isOpen, 
+  onToggle, 
+  onDelete, 
+  onUpdate,
+  isAnyItemEditing = false,
+  onEditingChange
+}) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
@@ -27,6 +35,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, o
   const handleEdit = () => {
     setIsEditing(true);
     setFullName(`${editedUser.first} ${editedUser.last}`);
+    onEditingChange?.(true);
   };
 
   const handleSave = () => {
@@ -41,12 +50,14 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, o
     
     onUpdate?.(updatedUser);
     setIsEditing(false);
+    onEditingChange?.(false);
   };
 
   const handleCancel = () => {
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
     setIsEditing(false);
+    onEditingChange?.(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -58,6 +69,13 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, o
         ...prev,
         [name]: value
       }));
+    }
+  };
+
+  const handleToggle = () => {
+    // Only allow toggling if not editing and no other item is being edited
+    if (!isEditing && !isAnyItemEditing) {
+      onToggle(user.id);
     }
   };
 
@@ -88,12 +106,13 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, o
             </h4>
           )}
           <button
-            onClick={() => onToggle(user.id)}
+            onClick={handleToggle}
             className={`p-2 transition-transform duration-300 ${
               isOpen ? "rotate-180 basis-[3%]" : ""
-            }`}
+            } ${(isEditing || isAnyItemEditing) ? "cursor-not-allowed opacity-50" : ""}`}
             aria-expanded={isOpen}
             aria-controls={`description-${user.id}`}
+            disabled={isEditing || isAnyItemEditing}
           >
             <FaChevronDown className="w-4 h-4" />
           </button>
@@ -185,11 +204,18 @@ const AccordionItem: React.FC<AccordionItemProps> = ({ user, isOpen, onToggle, o
               </>
             ) : (
               <>
-                <button className="mr-5" onClick={handleDelete}>
-                  <RiDeleteBin6Line color={"#ff2d00"} size={25} />
+                <button 
+                  className="mr-5" 
+                  onClick={handleDelete}
+                  disabled={isAnyItemEditing}
+                >
+                  <RiDeleteBin6Line color={isAnyItemEditing ? "#ffb3b3" : "#ff2d00"} size={25} />
                 </button>
-                <button onClick={handleEdit}>
-                  <FiEdit2 color={"#0075ff"} size={25} />
+                <button 
+                  onClick={handleEdit}
+                  disabled={isAnyItemEditing}
+                >
+                  <FiEdit2 color={isAnyItemEditing ? "#b3d9ff" : "#0075ff"} size={25} />
                 </button>
               </>
             )}

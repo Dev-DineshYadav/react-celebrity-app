@@ -16,4 +16,6 @@ export interface AccordionItemProps {
   onToggle: (id: number) => void;
   onDelete?: (id: number) => void;
   onUpdate?: (user: User) => void;
+  onEditingChange: (isEditing: boolean) => void;
+  isAnyItemEditing?: boolean
 }
