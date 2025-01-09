@@ -1,11 +1,12 @@
+import ListView from './ListView/page'
 import '../assets/css/App.css'
 
 function App() {
 
   return (
-    <>
-      <h1>Vite + React</h1>
-    </>
+    <main>
+      <ListView />
+    </main>
   )
 }
 
