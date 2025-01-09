@@ -4,31 +4,52 @@ import Input from "../Inputs";
 import AccordionItem from "../Accordion";
 import { User } from "../../types";
 
+const STORAGE_KEY = 'userListData';
+
 const ListView = () => {
   const [formData, setFormData] = useState({
     search: "",
   });
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [openAccordionId, setOpenAccordionId] = useState<string | number | null>(null);
+  const [openAccordionId, setOpenAccordionId] = useState<(string | number)[]>([]);
   const [isAnyItemEditing, setIsAnyItemEditing] = useState(false);
-  
+
   const handleToggle = (id: string | number) => {
     if (!isAnyItemEditing) {
-      setOpenAccordionId(prev => prev === id ? null : id);
+      setOpenAccordionId(prev => 
+        prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+      );
     }
   };
 
   const handleEditingChange = (isEditing: boolean) => setIsAnyItemEditing(isEditing);
 
   const handleDelete = (userId: number) => {
-    // Handle the deletion of the user
-    console.log('Deleting user:', userId);
+    const updatedUsers = users.filter(user => user.id !== userId);
+    setUsers(updatedUsers);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUsers));
+  };
+
+  const handleUpdate = (updatedUser: User) => {
+    const updatedUsers = users.map(user => 
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    setUsers(updatedUsers);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUsers));
   };
 
   const getUserData = useCallback(() => {
-    setUsers(DummyData);
-    setFilteredUsers(DummyData);
+    const storedUsers = localStorage.getItem(STORAGE_KEY);
+    if (storedUsers) {
+      const parsedUsers = JSON.parse(storedUsers);
+      setUsers(parsedUsers);
+      setFilteredUsers(parsedUsers);
+    } else {
+      setUsers(DummyData);
+      setFilteredUsers(DummyData);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DummyData));
+    }
   }, []);
 
   useEffect(() => {
@@ -78,9 +99,10 @@ const ListView = () => {
               <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
                 <AccordionItem
                   user={user}
-                  isOpen={openAccordionId === user.id}
+                  isOpen={openAccordionId.includes(user.id)}
                   onToggle={handleToggle}
                   onDelete={handleDelete}
+                  onUpdate={handleUpdate}
                   onEditingChange={handleEditingChange}
                   isAnyItemEditing={isAnyItemEditing}
                 />

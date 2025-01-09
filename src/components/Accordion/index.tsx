@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
@@ -23,6 +23,11 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   const [editedUser, setEditedUser] = useState(user);
   const [fullName, setFullName] = useState(`${user.first} ${user.last}`);
 
+  useEffect(() => {
+    setEditedUser(user);
+    setFullName(`${user.first} ${user.last}`);
+  }, [user]);
+
   const handleDelete = () => {
     setShowDeleteModal(true);
   };
@@ -34,7 +39,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 
   const handleEdit = () => {
     setIsEditing(true);
-    setFullName(`${editedUser.first} ${editedUser.last}`);
+    setEditedUser(user);
+    setFullName(`${user.first} ${user.last}`);
     onEditingChange?.(true);
   };
 
