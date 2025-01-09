@@ -14,6 +14,11 @@ const ListView = () => {
   
   const handleToggle = (userId: number) => setOpenAccordionId(openAccordionId === userId ? null : userId);
 
+  const handleDelete = (userId: number) => {
+    // Handle the deletion of the user
+    console.log('Deleting user:', userId);
+  };
+
   const getUserData = useCallback(() => {
     setUsers(DummyData);
     setFilteredUsers(DummyData);
@@ -68,6 +73,7 @@ const ListView = () => {
                   user={user}
                   isOpen={openAccordionId === user.id}
                   onToggle={handleToggle}
+                  onDelete={handleDelete}
                 />
               </li>
             ))
