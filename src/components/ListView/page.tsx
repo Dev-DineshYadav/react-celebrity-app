@@ -4,19 +4,36 @@ import Input from "../Inputs";
 import Accordion from "../Accordion";
 
 const ListView = () => {
-  const [formData, setFromData] = useState({
+  const [formData, setFormData] = useState({
     search: "",
   });
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
-  const getUserData = useCallback(() => setUsers(DummyData), [])
+  const getUserData = useCallback(() => {
+    setUsers(DummyData);
+    setFilteredUsers(DummyData);
+  }, []);
 
   useEffect(() => {
     getUserData();
-  },[]);
+  }, [getUserData]);
+
+  useEffect(() => {
+    // Filter users based on search input
+    const filtered = users.filter((user) => {
+      const searchTerm = formData.search.toLowerCase();
+      const firstName = user.first?.toLowerCase() || '';
+      const lastName = user.last?.toLowerCase() || '';
+      
+      return firstName.includes(searchTerm) || lastName.includes(searchTerm);
+    });
+    
+    setFilteredUsers(filtered);
+  }, [formData.search, users]);
   
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFromData({
+    setFormData({
       ...formData,
       [e.target.id]: e.target.value,
     });
@@ -33,26 +50,22 @@ const ListView = () => {
           className="my-10"
           value={formData.search}
           onChange={handleOnChange}
-          placeholder="Search users"
+          placeholder="Search by first or last name"
           name="search"
           id="search"
         />
 
         {/* List of Users */}
         <ul className="list_of_users">
-            {
-                users && users.length > 0 && (
-                    <>
-                        {
-                            users.map((user) => (
-                                <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
-                                    <Accordion user={user} />
-                                </li>
-                            ))
-                        }
-                    </>   
-                )
-            }
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
+              <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
+                <Accordion user={user} />
+              </li>
+            ))
+          ) : (
+            <li className="text-center py-4">No users found</li>
+          )}
         </ul>
       </div>
     </section>
