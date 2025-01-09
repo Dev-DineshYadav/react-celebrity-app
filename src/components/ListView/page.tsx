@@ -1,14 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
 import DummyData from '../../assets/dummyData/celebrities.json';
 import Input from "../Inputs";
-import Accordion from "../Accordion";
+import AccordionItem from "../Accordion";
+import { User } from "../../types";
 
 const ListView = () => {
   const [formData, setFormData] = useState({
     search: "",
   });
-  const [users, setUsers] = useState([]);
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [openAccordionId, setOpenAccordionId] = useState<string | number | null>(null);
+  
+  const handleToggle = (userId: number) => setOpenAccordionId(openAccordionId === userId ? null : userId);
 
   const getUserData = useCallback(() => {
     setUsers(DummyData);
@@ -60,7 +64,11 @@ const ListView = () => {
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
               <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
-                <Accordion user={user} />
+                <AccordionItem
+                  user={user}
+                  isOpen={openAccordionId === user.id}
+                  onToggle={handleToggle}
+                />
               </li>
             ))
           ) : (
