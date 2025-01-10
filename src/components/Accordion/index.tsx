@@ -170,6 +170,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                 {isEditing ? (
                   <Select
                     className="w-fit"
+                    id="gender"
+                    name="gender"
                     options={[
                       { value: 'male', label: 'Male' },
                       { value: 'female', label: 'Female' },
