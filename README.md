@@ -18,7 +18,7 @@ To get started with the project, follow these steps:
 1. **Clone the repository:**
 
 ```shellscript
-git clone https://github.com/yourusername/react-celebrity-app.git
+git clone https://github.com/Dev-DineshYadav/react-celebrity-app.git
 cd react-celebrity-app
 ```
 
