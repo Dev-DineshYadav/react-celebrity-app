@@ -1,50 +1,138 @@
-# React + TypeScript + Vite
+# YouVet Assignment - React Celebrity App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a React application that displays information about celebrities. It includes features such as viewing celebrity details, searching for celebrities, and more.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. [Installation](#installation)
+2. [Project Structure](#project-structure)
+3. [File Usage](#file-usage)
+4. [Running the Project](#running-the-project)
+5. [Building for Production](#building-for-production)
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Installation
 
-- Configure the top-level `parserOptions` property like this:
+To get started with the project, follow these steps:
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. **Clone the repository:**
+
+```shellscript
+git clone https://github.com/yourusername/react-celebrity-app.git
+cd react-celebrity-app
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+2. **Install dependencies:**
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```shellscript
+npm install
 ```
+
+
+
+
+## Project Structure
+
+The project structure is as follows:
+
+```plaintext
+react-celebrity-app/
+├── src/
+│   ├── assets/
+│   │   ├── css/
+│   │   ├── dummyData/
+│   │   ├── icons/
+│   │   └── images/
+│   ├── components/
+│   │   ├── Accordion/
+│   │   ├── Inputs/
+│   │   ├── ListView/
+│   │   ├── Modal/
+│   │   ├── Select/
+│   │   └── App.tsx
+│   ├── types/
+│   ├── utils/
+│   └── main.tsx
+├── package.json
+└── README.md
+```
+
+## File Usage
+
+### `src/assets/`
+
+Contains static assets used in the project.
+
+- `css/`: Contains CSS files for styling the application.
+
+- `App.css`: Styles specific to the App component.
+- `index.css`: Global styles for the application.
+
+
+- `dummyData/celebrities.json`: Contains dummy data for celebrities.
+
+
+### `src/components/`
+
+Contains reusable React components used throughout the project.
+
+- `Accordion/index.tsx`: Accordion component for expandable content.
+- `Inputs/index.tsx`: Input components for forms.
+- `ListView/page.tsx`: List view component to display a list of celebrities.
+- `Modal/index.tsx`: Modal component for pop-up dialogs.
+- `Select/index.tsx`: Select component for dropdowns.
+- `App.tsx`: Main App component.
+
+
+### `src/types/`
+
+Contains TypeScript type definitions.
+
+- `index.tsx`: Type definitions for the application.
+
+
+### `src/utils/`
+
+Contains utility functions and helpers used across the project.
+
+- `getBirthDate.tsx`: Utility function to get the birth date of a celebrity.
+
+
+### `src/main.tsx`
+
+Entry point of the application.
+
+### `package.json`
+
+Contains project metadata and dependencies.
+
+### `README.md`
+
+The documentation file you are currently reading.
+
+## Running the Project
+
+To run the project in development mode, use the following command:
+
+```bash
+npm run dev
+```
+
+This will start the development server on `http://localhost:3000`.
+
+## Building for Production
+
+To build the project for production, use the following command:
+
+```bash
+npm run build
+```
+
+This will create an optimized production build. To start the production server, use:
+
+```bash
+npm start
+```
+
+This will start the server on `http://localhost:3000`.
