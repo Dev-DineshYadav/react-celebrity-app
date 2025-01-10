@@ -99,8 +99,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   return (
     <>
       <div className="w-full border rounded-lg overflow-hidden">
-        <div className="flex items-center p-4 bg-white">
-          <figure className="w-12 h-12 rounded-full overflow-hidden">
+        <div className="flex items-center p-2 sm:p-4 bg-white">
+          <figure className="w-8 h-8 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
             <img
               src={user.picture ? user.picture : Avatar}
               alt={user.first}
@@ -108,25 +108,25 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             />
           </figure>
           {isEditing ? (
-            <div className="flex-grow mx-4">
+            <div className="flex-grow mx-2 sm:mx-4 min-w-0">
               <Input
                 name="fullName"
                 id="fullName"
                 value={fullName}
                 onChange={handleChange}
-                className="w-fit px-2 py-1 border rounded-lg"
+                className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
                 placeholder="Full Name"
               />
             </div>
           ) : (
-            <h4 className="flex-grow mx-4 font-bold capitalize">
+            <h4 className="flex-grow mx-2 sm:mx-4 font-bold capitalize text-sm sm:text-base truncate">
               {user.first} {user.last}
             </h4>
           )}
           <button
             onClick={handleToggle}
-            className={`p-2 transition-transform duration-300 ${
-              isOpen ? "rotate-180 basis-[3%]" : ""
+            className={`p-1 sm:p-2 transition-transform duration-300 flex-shrink-0 ${
+              isOpen ? "rotate-180" : ""
             } ${
               isEditing || isAnyItemEditing
                 ? "cursor-not-allowed opacity-50"
@@ -136,20 +136,20 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             aria-controls={`description-${user.id}`}
             disabled={isEditing || isAnyItemEditing}
           >
-            <FaChevronDown className="w-4 h-4" />
+            <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
           </button>
         </div>
 
         <div
           id={`description-${user.id}`}
           className={`overflow-hidden transition-all duration-300 ${
-            isOpen ? "h-[100%] p-4" : "max-h-0"
+            isOpen ? "h-auto p-2 sm:p-4" : "max-h-0"
           }`}
         >
-          <ul className="flex items-center mb-5">
-            <li className="basis-1/3">
+          <ul className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-5">
+            <li className="sm:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71]">age</span>
+                <span className="capitalize text-[#6e6e71] text-sm">age</span>
                 {isEditing ? (
                   <Input
                     type="date"
@@ -157,19 +157,19 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                     id="dob"
                     value={editedUser.dob}
                     onChange={handleChange}
-                    className="w-fit px-2 py-1 border rounded-lg"
+                    className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
                   />
                 ) : (
-                  <span>{`${userAge} Years`}</span>
+                  <span className="text-sm sm:text-base">{`${userAge} Years`}</span>
                 )}
               </div>
             </li>
-            <li className="basis-1/3">
+            <li className="sm:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71]">gender</span>
+                <span className="capitalize text-[#6e6e71] text-sm">gender</span>
                 {isEditing ? (
                   <Select
-                    className="w-fit"
+                    className="w-full sm:w-fit text-sm sm:text-base"
                     id="gender"
                     name="gender"
                     options={[
@@ -182,62 +182,62 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                     onChange={handleChange}
                   />
                 ) : (
-                  <span className="capitalize">{user.gender}</span>
+                  <span className="capitalize text-sm sm:text-base">{user.gender}</span>
                 )}
               </div>
             </li>
-            <li className="basis-1/3">
+            <li className="sm:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71]">country</span>
+                <span className="capitalize text-[#6e6e71] text-sm">country</span>
                 {isEditing ? (
                   <Input
-                    className="w-fit px-2 py-1 border rounded-lg"
+                    className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
                     name="country"
                     id="country"
                     value={editedUser.country}
                     onChange={handleChange}
                   />
                 ) : (
-                  <span className="capitalize">{user.country}</span>
+                  <span className="capitalize text-sm sm:text-base">{user.country}</span>
                 )}
               </div>
             </li>
           </ul>
 
           <div>
-            <span className="text-[#6e6e71] capitalize">description</span>
+            <span className="text-[#6e6e71] capitalize text-sm">description</span>
             {isEditing ? (
               <Textarea
-                className="w-full mt-2 px-2 py-1 border rounded-lg"
+                className="w-full mt-2 px-2 py-1 border rounded-lg text-sm sm:text-base"
                 placeholder="Enter description"
                 value={editedUser.description}
                 onChange={handleChange}
               />
             ) : (
-              <p className="mt-2">{user.description}</p>
+              <p className="mt-2 text-sm sm:text-base">{user.description}</p>
             )}
           </div>
 
-          <div className="flex justify-end items-center mt-5">
+          <div className="flex justify-end items-center mt-4 sm:mt-5 space-x-3 sm:space-x-5">
             {isEditing ? (
               <>
-                <button className="mr-5" onClick={handleCancel}>
-                  <RxCrossCircled color={"#ff2d00"} size={25} />
+                <button onClick={handleCancel}>
+                  <RxCrossCircled color={"#ff2d00"} size={20} className="sm:w-6 sm:h-6" />
                 </button>
                 <button onClick={handleSave}>
-                  <IoCheckmarkCircleOutline color={"#00a854"} size={25} />
+                  <IoCheckmarkCircleOutline color={"#00a854"} size={20} className="sm:w-6 sm:h-6" />
                 </button>
               </>
             ) : (
               <>
                 <button
-                  className="mr-5"
                   onClick={handleDelete}
                   disabled={isAnyItemEditing}
                 >
                   <RiDeleteBin6Line
                     color={isAnyItemEditing ? "#ffb3b3" : "#ff2d00"}
-                    size={25}
+                    size={20}
+                    className="sm:w-6 sm:h-6"
                   />
                 </button>
                 <button 
@@ -247,7 +247,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                 >
                   <FiEdit2
                     color={isAnyItemEditing || !isEditable ? "#b3d9ff" : "#0075ff"}
-                    size={25}
+                    size={20}
+                    className="sm:w-6 sm:h-6"
                   />
                 </button>
               </>

@@ -197,3 +197,10 @@ li {
   width: 60%;
   margin: 0 auto;
 }
+
+/*media query starts*/
+@media only screen and (max-width: 640px) {
+.wrapper {
+    width: 85%;
+  }
+}

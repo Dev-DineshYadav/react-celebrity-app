@@ -84,7 +84,7 @@ const ListView = () => {
 
         {/* Search Input */}
         <Input
-          className="my-10"
+          className="w-full my-10"
           value={formData.search}
           onChange={handleOnChange}
           placeholder="Search by first or last name"
