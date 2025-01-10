@@ -20,6 +20,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   onUpdate,
   isAnyItemEditing = false,
   onEditingChange,
+  forceExitEdit = false
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -35,6 +36,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
   }, [user]);
+
+   useEffect(() => {
+    if (forceExitEdit && isEditing) {
+      handleCancel();
+    }
+  }, [forceExitEdit]);
 
   const validateFields = () => {
     const newErrors: Record<string, string> = {};

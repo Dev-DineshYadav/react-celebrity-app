@@ -17,7 +17,8 @@ export interface AccordionItemProps {
   onDelete?: (id: number) => void;
   onUpdate?: (user: User) => void;
   onEditingChange: (isEditing: boolean) => void;
-  isAnyItemEditing?: boolean
+  isAnyItemEditing?: boolean;
+  forceExitEdit?: boolean; 
 }
 
 export interface BaseFieldProps {

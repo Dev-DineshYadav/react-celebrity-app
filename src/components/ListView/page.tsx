@@ -14,6 +14,7 @@ const ListView = () => {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [openAccordionId, setOpenAccordionId] = useState<string | number | null>(null);
   const [isAnyItemEditing, setIsAnyItemEditing] = useState(false);
+  const [forceExitEdit, setForceExitEdit] = useState(false);
 
   const handleToggle = (id: string | number) => {
     if (!isAnyItemEditing) {
@@ -71,6 +72,8 @@ const ListView = () => {
   
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setOpenAccordionId(null)
+    setForceExitEdit(prev => !prev); 
+    setIsAnyItemEditing(false);
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
@@ -106,6 +109,7 @@ const ListView = () => {
                   onUpdate={handleUpdate}
                   onEditingChange={handleEditingChange}
                   isAnyItemEditing={isAnyItemEditing}
+                  forceExitEdit={forceExitEdit}
                 />
               </li>
             ))
