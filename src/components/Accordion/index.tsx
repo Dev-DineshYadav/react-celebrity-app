@@ -10,6 +10,7 @@ import Avatar from "../../assets/images/avatar.png";
 import { AccordionItemProps } from "../../types";
 import { Input, Textarea } from "../Inputs";
 import Select from "../Select";
+import {useResponsiveRows} from "../../hooks/useResponsiveRows.js"
 
 const AccordionItem: React.FC<AccordionItemProps> = ({
   user,
@@ -24,6 +25,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
   const [fullName, setFullName] = useState(`${user.first} ${user.last}`);
+  const rows = useResponsiveRows();
 
   const userAge = calculateAge(user.dob);
   const isEditable = userAge >= 18;
@@ -107,22 +109,23 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               className="w-full h-full rounded-full object-cover"
             />
           </figure>
-          {isEditing ? (
-            <div className="flex-grow mx-2 sm:mx-4 min-w-0">
-              <Input
-                name="fullName"
-                id="fullName"
-                value={fullName}
-                onChange={handleChange}
-                className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
-                placeholder="Full Name"
-              />
+            <div className="basis-[75%] mx-2 sm:mx-4 min-w-0">
+              {
+                isEditing
+                  ? <Input
+                      name="fullName"
+                      id="fullName"
+                      value={fullName}
+                      onChange={handleChange}
+                      className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
+                      placeholder="Full Name"
+                    />
+                  :  <h4 className="font-semibold capitalize text-base sm:text-base truncate">
+                        {user.first} {user.last}
+                      </h4>
+              }
+              
             </div>
-          ) : (
-            <h4 className="basis-[75%] font-semibold capitalize text-base sm:text-base truncate">
-              {user.first} {user.last}
-            </h4>
-          )}
           <button
             onClick={handleToggle}
             className={`p-1 sm:p-2 transition-transform duration-300 ${
@@ -130,7 +133,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             } ${
               isEditing || isAnyItemEditing
                 ? "cursor-not-allowed opacity-50"
-                : ""
+                : "cursor-pointer"
             }`}
             aria-expanded={isOpen}
             aria-controls={`description-${user.id}`}
@@ -143,13 +146,13 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
         <div
           id={`description-${user.id}`}
           className={`overflow-hidden transition-all duration-300 ${
-            isOpen ? "h-auto p-2 sm:p-4" : "max-h-0"
+            isOpen ? "h-auto p-3 sm:p-6" : "max-h-0"
           }`}
         >
-          <ul className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-0 mb-4 sm:mb-5">
-            <li className="sm:basis-1/3">
+          <ul className="flex flex-col md:flex-row md:items-center gap-3 md:gap-0 mb-4 md:mb-5">
+            <li className="md:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71] text-sm">age</span>
+                <span className="capitalize text-[#6e6e71] text-sm mb-1">age</span>
                 {isEditing ? (
                   <Input
                     type="date"
@@ -157,24 +160,26 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                     id="dob"
                     value={editedUser.dob}
                     onChange={handleChange}
-                    className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
+                    className="w-full md:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
                   />
                 ) : (
-                  <span className="text-sm sm:text-base">{`${userAge} Years`}</span>
+                  <span className="text-sm md:text-base">{`${userAge} Years`}</span>
                 )}
               </div>
             </li>
-            <li className="sm:basis-1/3">
+            <li className="md:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71] text-sm">gender</span>
+                <span className="capitalize text-[#6e6e71] text-sm mb-1">gender</span>
                 {isEditing ? (
                   <Select
-                    className="w-full sm:w-fit text-sm sm:text-base"
+                    className="w-full md:w-fit text-sm md:text-base"
                     id="gender"
                     name="gender"
                     options={[
                       { value: 'male', label: 'Male' },
                       { value: 'female', label: 'Female' },
+                      { value: 'transgender', label: 'Transgender' },
+                      { value: 'rather_not_say', label: 'Rather not say' },
                       { value: 'other', label: 'Other' },
                     ]}
                     placeholder="Choose an option"
@@ -182,23 +187,23 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                     onChange={handleChange}
                   />
                 ) : (
-                  <span className="capitalize text-sm sm:text-base">{user.gender}</span>
+                  <span className="capitalize text-sm md:text-base">{user.gender}</span>
                 )}
               </div>
             </li>
-            <li className="sm:basis-1/3">
+            <li className="md:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71] text-sm">country</span>
+                <span className="capitalize text-[#6e6e71] text-sm mb-1">country</span>
                 {isEditing ? (
                   <Input
-                    className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
+                    className="w-full md:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
                     name="country"
                     id="country"
                     value={editedUser.country}
                     onChange={handleChange}
                   />
                 ) : (
-                  <span className="capitalize text-sm sm:text-base">{user.country}</span>
+                  <span className="capitalize text-sm md:text-base">{user.country}</span>
                 )}
               </div>
             </li>
@@ -208,7 +213,8 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             <span className="text-[#6e6e71] capitalize text-sm">description</span>
             {isEditing ? (
               <Textarea
-                className="w-full mt-2 px-2 py-1 border rounded-lg text-sm sm:text-base"
+                rows={rows}
+                className="w-full px-2 py-1 border rounded-lg text-sm sm:text-base"
                 placeholder="Enter description"
                 value={editedUser.description}
                 onChange={handleChange}
@@ -222,10 +228,10 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             {isEditing ? (
               <>
                 <button onClick={handleCancel}>
-                  <RxCrossCircled color={"#ff2d00"} size={20} className="sm:w-6 sm:h-6" />
+                  <RxCrossCircled color={"#ff3703"} size={20} className="sm:w-6 sm:h-6" />
                 </button>
                 <button onClick={handleSave}>
-                  <IoCheckmarkCircleOutline color={"#00a854"} size={20} className="sm:w-6 sm:h-6" />
+                  <IoCheckmarkCircleOutline color={"#37b000"} size={20} className="sm:w-6 sm:h-6" />
                 </button>
               </>
             ) : (
