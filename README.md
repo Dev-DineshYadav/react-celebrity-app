@@ -115,18 +115,24 @@ The documentation file you are currently reading.
 
 To run the project in development mode, use the following command:
 
-```shellscript
-npm start
+```bash
+npm run dev
 ```
 
-This will start the development server and open the application in your default browser.
+This will start the development server on `http://localhost:3000`.
 
 ## Building for Production
 
 To build the project for production, use the following command:
 
-```shellscript
+```bash
 npm run build
 ```
 
-This will start the server, typically on `http://localhost:5173`.
+This will create an optimized production build in the `.next` directory. To start the production server, use:
+
+```bash
+npm start
+```
+
+This will start the server on `http://localhost:3000`.
