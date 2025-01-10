@@ -6,17 +6,19 @@ import { calculateAge } from "../../utils/getBirthDate";
 import DeleteModal from "../Modal";
 import { RxCrossCircled } from "react-icons/rx";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
-import Avatar from '../../assets/images/avatar.png';
+import Avatar from "../../assets/images/avatar.png";
 import { AccordionItemProps } from "../../types";
+import Input from "../Inputs";
+import Select from "../Select";
 
-const AccordionItem: React.FC<AccordionItemProps> = ({ 
-  user, 
-  isOpen, 
-  onToggle, 
-  onDelete, 
+const AccordionItem: React.FC<AccordionItemProps> = ({
+  user,
+  isOpen,
+  onToggle,
+  onDelete,
   onUpdate,
   isAnyItemEditing = false,
-  onEditingChange
+  onEditingChange,
 }) => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -45,15 +47,15 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   };
 
   const handleSave = () => {
-    const [first, ...lastParts] = fullName.trim().split(' ');
-    const last = lastParts.join(' ');
-    
+    const [first, ...lastParts] = fullName.trim().split(" ");
+    const last = lastParts.join(" ");
+
     const updatedUser = {
       ...editedUser,
-      first: first || '',
-      last: last || ''
+      first: first || "",
+      last: last || "",
     };
-    
+
     onUpdate?.(updatedUser);
     setIsEditing(false);
     onEditingChange?.(false);
@@ -66,20 +68,23 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     onEditingChange?.(false);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    if (name === 'fullName') {
+    if (name === "fullName") {
       setFullName(value);
     } else {
-      setEditedUser(prev => ({
+      setEditedUser((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
 
   const handleToggle = () => {
-    // Only allow toggling if not editing and no other item is being edited
     if (!isEditing && !isAnyItemEditing) {
       onToggle(user.id);
     }
@@ -98,11 +103,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           </figure>
           {isEditing ? (
             <div className="flex-grow mx-4">
-              <input
+              <Input 
                 name="fullName"
+                id="fullName"
                 value={fullName}
                 onChange={handleChange}
-                className="w-full px-2 py-1 border rounded"
+                className="w-fit px-2 py-1 border rounded-lg"
                 placeholder="Full Name"
               />
             </div>
@@ -115,7 +121,11 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             onClick={handleToggle}
             className={`p-2 transition-transform duration-300 ${
               isOpen ? "rotate-180 basis-[3%]" : ""
-            } ${(isEditing || isAnyItemEditing) ? "cursor-not-allowed opacity-50" : ""}`}
+            } ${
+              isEditing || isAnyItemEditing
+                ? "cursor-not-allowed opacity-50"
+                : ""
+            }`}
             aria-expanded={isOpen}
             aria-controls={`description-${user.id}`}
             disabled={isEditing || isAnyItemEditing}
@@ -135,12 +145,13 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">age</span>
                 {isEditing ? (
-                  <input
+                  <Input
                     type="date"
                     name="dob"
+                    id="dob"
                     value={editedUser.dob}
                     onChange={handleChange}
-                    className="px-2 py-1 border rounded"
+                    className="w-fit px-2 py-1 border rounded-lg"
                   />
                 ) : (
                   <span>{`${calculateAge(user.dob)} Years`}</span>
@@ -151,16 +162,17 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">gender</span>
                 {isEditing ? (
-                  <select
-                    name="gender"
-                    value={editedUser.gender}
-                    onChange={handleChange}
-                    className="px-2 py-1 border rounded"
-                  >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                  </select>
+                    <Select
+                      className="w-fit"
+                      options={[
+                        { value: 'male', label: 'Male' },
+                        { value: 'female', label: 'Female' },
+                        { value: 'other', label: 'Other' },
+                      ]}
+                      placeholder="Choose an option"
+                      value={editedUser.gender}
+                      onChange={handleChange}
+                    />
                 ) : (
                   <span className="capitalize">{user.gender}</span>
                 )}
@@ -170,11 +182,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">country</span>
                 {isEditing ? (
-                  <input
+                  <Input
+                    className="w-fit px-2 py-1 border rounded-lg"
                     name="country"
+                    id="country"
                     value={editedUser.country}
                     onChange={handleChange}
-                    className="px-2 py-1 border rounded"
                   />
                 ) : (
                   <span className="capitalize">{user.country}</span>
@@ -210,18 +223,21 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               </>
             ) : (
               <>
-                <button 
-                  className="mr-5" 
+                <button
+                  className="mr-5"
                   onClick={handleDelete}
                   disabled={isAnyItemEditing}
                 >
-                  <RiDeleteBin6Line color={isAnyItemEditing ? "#ffb3b3" : "#ff2d00"} size={25} />
+                  <RiDeleteBin6Line
+                    color={isAnyItemEditing ? "#ffb3b3" : "#ff2d00"}
+                    size={25}
+                  />
                 </button>
-                <button 
-                  onClick={handleEdit}
-                  disabled={isAnyItemEditing}
-                >
-                  <FiEdit2 color={isAnyItemEditing ? "#b3d9ff" : "#0075ff"} size={25} />
+                <button onClick={handleEdit} disabled={isAnyItemEditing}>
+                  <FiEdit2
+                    color={isAnyItemEditing ? "#b3d9ff" : "#0075ff"}
+                    size={25}
+                  />
                 </button>
               </>
             )}

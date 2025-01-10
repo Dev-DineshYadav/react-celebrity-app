@@ -12,14 +12,12 @@ const ListView = () => {
   });
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [openAccordionId, setOpenAccordionId] = useState<(string | number)[]>([]);
+  const [openAccordionId, setOpenAccordionId] = useState<string | number | null>(null);
   const [isAnyItemEditing, setIsAnyItemEditing] = useState(false);
 
   const handleToggle = (id: string | number) => {
     if (!isAnyItemEditing) {
-      setOpenAccordionId(prev => 
-        prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-      );
+      setOpenAccordionId(prevId => prevId === id ? null : id);
     }
   };
 
@@ -29,6 +27,9 @@ const ListView = () => {
     const updatedUsers = users.filter(user => user.id !== userId);
     setUsers(updatedUsers);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUsers));
+    if (openAccordionId === userId) {
+      setOpenAccordionId(null);
+    }
   };
 
   const handleUpdate = (updatedUser: User) => {
@@ -57,7 +58,6 @@ const ListView = () => {
   }, [getUserData]);
 
   useEffect(() => {
-    // Filter users based on search input
     const filtered = users.filter((user) => {
       const searchTerm = formData.search.toLowerCase();
       const firstName = user.first?.toLowerCase() || '';
@@ -99,7 +99,7 @@ const ListView = () => {
               <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
                 <AccordionItem
                   user={user}
-                  isOpen={openAccordionId.includes(user.id)}
+                  isOpen={openAccordionId === user.id}
                   onToggle={handleToggle}
                   onDelete={handleDelete}
                   onUpdate={handleUpdate}
