@@ -1,6 +1,5 @@
 import React, { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
-
-// Common props for both Input and Textarea
+import { generateId, getDateLimits } from '../../utils';
 interface BaseFieldProps {
   label?: string;
   error?: string;
@@ -9,16 +8,13 @@ interface BaseFieldProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-// Input specific props
 interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>, BaseFieldProps {}
 
-// Textarea specific props
 interface TextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'size'>, BaseFieldProps {
   rows?: number;
   maxRows?: number;
 }
 
-// Shared styles object
 const styles = {
   size: {
     sm: 'px-2 py-1 text-sm',
@@ -38,9 +34,6 @@ const styles = {
   default: 'border-gray-300 focus:ring-blue-500 focus:border-blue-500'
 };
 
-// Helper function to generate unique IDs
-const generateId = () => `field-${Math.random().toString(36).substr(2, 9)}`;
-
 export const Input: React.FC<InputProps> = ({
   type = 'text',
   placeholder = 'Enter your text here',
@@ -57,6 +50,21 @@ export const Input: React.FC<InputProps> = ({
   ...props
 }) => {
   const inputId = id || generateId();
+  const dateLimits = type === 'date' ? getDateLimits() : null;
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (type === 'date') {
+      const selectedDate = new Date(e.target.value);
+      const maxDate = new Date(dateLimits?.max || '');
+
+      if (selectedDate > maxDate) {
+        e.target.setCustomValidity('You must be at least 18 years old');
+      } else {
+        e.target.setCustomValidity('');
+      }
+    }
+    onChange?.(e);
+  };
 
   return (
     <div className="w-full">
@@ -78,9 +86,10 @@ export const Input: React.FC<InputProps> = ({
         name={name}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={handleDateChange}
         disabled={disabled}
         required={required}
+        max={type === 'date' ? dateLimits?.max : undefined}
         className={`
           ${styles.base}
           ${styles.size[size]}

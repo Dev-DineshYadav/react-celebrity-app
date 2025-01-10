@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
-import { calculateAge } from "../../utils/getBirthDate";
+import { calculateAge } from "../../utils/index.js";
 import DeleteModal from "../Modal";
 import { RxCrossCircled } from "react-icons/rx";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
