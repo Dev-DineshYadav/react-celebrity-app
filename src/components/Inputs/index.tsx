@@ -30,7 +30,7 @@ const styles = {
     md: 'text-sm',
     lg: 'text-base'
   },
-  base: `w-full border rounded-xl placeholder:text-gray-400
+  base: `border rounded-xl placeholder:text-gray-400
     focus:outline-none focus:ring-2 focus:ring-opacity-50
     transition-colors duration-200`,
   disabled: 'bg-gray-50 cursor-not-allowed opacity-50',
@@ -117,8 +117,8 @@ export const Textarea: React.FC<TextareaProps> = ({
   size = 'md',
   id,
   name,
-  rows = 4,
-  maxRows = 8,
+  rows = 3,
+  maxRows = 6,
   ...props
 }) => {
   const textareaId = id || generateId();

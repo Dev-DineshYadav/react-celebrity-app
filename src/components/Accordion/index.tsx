@@ -8,7 +8,7 @@ import { RxCrossCircled } from "react-icons/rx";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import Avatar from "../../assets/images/avatar.png";
 import { AccordionItemProps } from "../../types";
-import {Input, Textarea} from "../Inputs";
+import { Input, Textarea } from "../Inputs";
 import Select from "../Select";
 
 const AccordionItem: React.FC<AccordionItemProps> = ({
@@ -25,6 +25,9 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   const [editedUser, setEditedUser] = useState(user);
   const [fullName, setFullName] = useState(`${user.first} ${user.last}`);
 
+  const userAge = calculateAge(user.dob);
+  const isEditable = userAge >= 18;
+
   useEffect(() => {
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
@@ -40,6 +43,9 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   };
 
   const handleEdit = () => {
+    if (!isEditable) {
+      return;
+    }
     setIsEditing(true);
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
@@ -103,7 +109,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           </figure>
           {isEditing ? (
             <div className="flex-grow mx-4">
-              <Input 
+              <Input
                 name="fullName"
                 id="fullName"
                 value={fullName}
@@ -154,7 +160,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                     className="w-fit px-2 py-1 border rounded-lg"
                   />
                 ) : (
-                  <span>{`${calculateAge(user.dob)} Years`}</span>
+                  <span>{`${userAge} Years`}</span>
                 )}
               </div>
             </li>
@@ -162,17 +168,17 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71]">gender</span>
                 {isEditing ? (
-                    <Select
-                      className="w-fit"
-                      options={[
-                        { value: 'male', label: 'Male' },
-                        { value: 'female', label: 'Female' },
-                        { value: 'other', label: 'Other' },
-                      ]}
-                      placeholder="Choose an option"
-                      value={editedUser.gender}
-                      onChange={handleChange}
-                    />
+                  <Select
+                    className="w-fit"
+                    options={[
+                      { value: 'male', label: 'Male' },
+                      { value: 'female', label: 'Female' },
+                      { value: 'other', label: 'Other' },
+                    ]}
+                    placeholder="Choose an option"
+                    value={editedUser.gender}
+                    onChange={handleChange}
+                  />
                 ) : (
                   <span className="capitalize">{user.gender}</span>
                 )}
@@ -199,15 +205,12 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           <div>
             <span className="text-[#6e6e71] capitalize">description</span>
             {isEditing ? (
-                <Textarea
-                  className="w-full mt-2 px-2 py-1 border rounded"
-                  placeholder="Enter description"
-                  value={editedUser.description}
-                  rows={4}
-                  maxRows={8}
-                  onChange={handleChange}
-                  size="md"
-                />
+              <Textarea
+                className="w-full mt-2 px-2 py-1 border rounded-lg"
+                placeholder="Enter description"
+                value={editedUser.description}
+                onChange={handleChange}
+              />
             ) : (
               <p className="mt-2">{user.description}</p>
             )}
@@ -235,9 +238,13 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
                     size={25}
                   />
                 </button>
-                <button onClick={handleEdit} disabled={isAnyItemEditing}>
+                <button 
+                  onClick={handleEdit} 
+                  disabled={isAnyItemEditing || !isEditable}
+                  title={!isEditable ? "User must be 18 or older to edit" : ""}
+                >
                   <FiEdit2
-                    color={isAnyItemEditing ? "#b3d9ff" : "#0075ff"}
+                    color={isAnyItemEditing || !isEditable ? "#b3d9ff" : "#0075ff"}
                     size={25}
                   />
                 </button>

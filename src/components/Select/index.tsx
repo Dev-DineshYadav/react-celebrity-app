@@ -57,7 +57,7 @@ const Select: React.FC<SelectProps> = ({
         disabled={disabled}
         required={required}
         className={`
-          w-full border rounded-xl
+          border rounded-xl
           appearance-none
           bg-white
           ${sizeStyles[size]}
