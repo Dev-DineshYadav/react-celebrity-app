@@ -10,7 +10,7 @@ import Avatar from "../../assets/images/avatar.png";
 import { AccordionItemProps } from "../../types";
 import { Input, Textarea } from "../Inputs";
 import Select from "../Select";
-import {useResponsiveRows} from "../../hooks/useResponsiveRows.js"
+import { useResponsiveRows } from "../../hooks/useResponsiveRows.js"
 
 const AccordionItem: React.FC<AccordionItemProps> = ({
   user,
@@ -25,6 +25,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(user);
   const [fullName, setFullName] = useState(`${user.first} ${user.last}`);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const rows = useResponsiveRows();
 
   const userAge = calculateAge(user.dob);
@@ -34,6 +35,33 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
   }, [user]);
+
+  const validateFields = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!fullName.trim()) {
+      newErrors.fullName = "Full name is required";
+    }
+
+    if (!editedUser.dob) {
+      newErrors.dob = "Date of birth is required";
+    }
+
+    if (!editedUser.gender) {
+      newErrors.gender = "Gender is required";
+    }
+
+    if (!editedUser.country?.trim()) {
+      newErrors.country = "Country is required";
+    }
+
+    if (!editedUser.description?.trim()) {
+      newErrors.description = "Description is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleDelete = () => {
     setShowDeleteModal(true);
@@ -51,21 +79,35 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     setIsEditing(true);
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
+    setErrors({});
     onEditingChange?.(true);
   };
 
   const handleSave = () => {
+    if (!validateFields()) {
+      return;
+    }
+
     const [first, ...lastParts] = fullName.trim().split(" ");
     const last = lastParts.join(" ");
 
+    if (!first || !last) {
+      setErrors(prev => ({
+        ...prev,
+        fullName: "Please provide both first and last name"
+      }));
+      return;
+    }
+
     const updatedUser = {
       ...editedUser,
-      first: first || "",
-      last: last || "",
+      first,
+      last,
     };
 
     onUpdate?.(updatedUser);
     setIsEditing(false);
+    setErrors({});
     onEditingChange?.(false);
   };
 
@@ -73,6 +115,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     setEditedUser(user);
     setFullName(`${user.first} ${user.last}`);
     setIsEditing(false);
+    setErrors({});
     onEditingChange?.(false);
   };
 
@@ -84,11 +127,17 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     const { name, value } = e.target;
     if (name === "fullName") {
       setFullName(value);
+      if (errors.fullName) {
+        setErrors(prev => ({ ...prev, fullName: "" }));
+      }
     } else {
-      setEditedUser((prev) => ({
+      setEditedUser(prev => ({
         ...prev,
         [name]: value,
       }));
+      if (errors[name]) {
+        setErrors(prev => ({ ...prev, [name]: "" }));
+      }
     }
   };
 
@@ -109,23 +158,29 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               className="w-full h-full rounded-full object-cover"
             />
           </figure>
-            <div className="basis-[75%] mx-2 sm:mx-4 min-w-0">
-              {
-                isEditing
-                  ? <Input
-                      name="fullName"
-                      id="fullName"
-                      value={fullName}
-                      onChange={handleChange}
-                      className="w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
-                      placeholder="Full Name"
-                    />
-                  :  <h4 className="font-semibold capitalize text-base sm:text-base truncate">
-                        {user.first} {user.last}
-                      </h4>
-              }
-              
-            </div>
+          <div className="basis-[75%] mx-2 sm:mx-4 min-w-0">
+            {isEditing ? (
+              <div className="flex flex-col">
+                <Input
+                  name="fullName"
+                  id="fullName"
+                  value={fullName}
+                  onChange={handleChange}
+                  className={`w-full sm:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base ${
+                    errors.fullName ? "border-red-500" : ""
+                  }`}
+                  placeholder="Full Name"
+                />
+                {errors.fullName && (
+                  <span className="text-red-500 text-xs mt-1">{errors.fullName}</span>
+                )}
+              </div>
+            ) : (
+              <h4 className="font-semibold capitalize text-base sm:text-base truncate">
+                {user.first} {user.last}
+              </h4>
+            )}
+          </div>
           <button
             onClick={handleToggle}
             className={`p-1 sm:p-2 transition-transform duration-300 ${
@@ -154,14 +209,21 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71] text-sm mb-1">age</span>
                 {isEditing ? (
-                  <Input
-                    type="date"
-                    name="dob"
-                    id="dob"
-                    value={editedUser.dob}
-                    onChange={handleChange}
-                    className="w-full md:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
-                  />
+                  <div>
+                    <Input
+                      type="date"
+                      name="dob"
+                      id="dob"
+                      value={editedUser.dob}
+                      onChange={handleChange}
+                      className={`w-full md:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base ${
+                        errors.dob ? "border-red-500" : ""
+                      }`}
+                    />
+                    {errors.dob && (
+                      <span className="text-red-500 text-xs mt-1">{errors.dob}</span>
+                    )}
+                  </div>
                 ) : (
                   <span className="text-sm md:text-base">{`${userAge} Years`}</span>
                 )}
@@ -171,21 +233,28 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71] text-sm mb-1">gender</span>
                 {isEditing ? (
-                  <Select
-                    className="w-full md:w-fit text-sm md:text-base"
-                    id="gender"
-                    name="gender"
-                    options={[
-                      { value: 'male', label: 'Male' },
-                      { value: 'female', label: 'Female' },
-                      { value: 'transgender', label: 'Transgender' },
-                      { value: 'rather_not_say', label: 'Rather not say' },
-                      { value: 'other', label: 'Other' },
-                    ]}
-                    placeholder="Choose an option"
-                    value={editedUser.gender}
-                    onChange={handleChange}
-                  />
+                  <div>
+                    <Select
+                      className={`w-full md:w-fit text-sm md:text-base ${
+                        errors.gender ? "border-red-500" : ""
+                      }`}
+                      id="gender"
+                      name="gender"
+                      options={[
+                        { value: 'male', label: 'Male' },
+                        { value: 'female', label: 'Female' },
+                        { value: 'transgender', label: 'Transgender' },
+                        { value: 'rather_not_say', label: 'Rather not say' },
+                        { value: 'other', label: 'Other' },
+                      ]}
+                      placeholder="Choose an option"
+                      value={editedUser.gender}
+                      onChange={handleChange}
+                    />
+                    {errors.gender && (
+                      <span className="text-red-500 text-xs mt-1">{errors.gender}</span>
+                    )}
+                  </div>
                 ) : (
                   <span className="capitalize text-sm md:text-base">{user.gender}</span>
                 )}
@@ -195,13 +264,20 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               <div className="flex flex-col">
                 <span className="capitalize text-[#6e6e71] text-sm mb-1">country</span>
                 {isEditing ? (
-                  <Input
-                    className="w-full md:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base"
-                    name="country"
-                    id="country"
-                    value={editedUser.country}
-                    onChange={handleChange}
-                  />
+                  <div>
+                    <Input
+                      className={`w-full md:w-fit px-2 py-1 border rounded-lg text-sm sm:text-base ${
+                        errors.country ? "border-red-500" : ""
+                      }`}
+                      name="country"
+                      id="country"
+                      value={editedUser.country}
+                      onChange={handleChange}
+                    />
+                    {errors.country && (
+                      <span className="text-red-500 text-xs mt-1">{errors.country}</span>
+                    )}
+                  </div>
                 ) : (
                   <span className="capitalize text-sm md:text-base">{user.country}</span>
                 )}
@@ -212,13 +288,21 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           <div>
             <span className="text-[#6e6e71] capitalize text-sm">description</span>
             {isEditing ? (
-              <Textarea
-                rows={rows}
-                className="w-full px-2 py-1 border rounded-lg text-sm sm:text-base"
-                placeholder="Enter description"
-                value={editedUser.description}
-                onChange={handleChange}
-              />
+              <div>
+                <Textarea
+                  rows={rows}
+                  className={`w-full px-2 py-1 border rounded-lg text-sm sm:text-base ${
+                    errors.description ? "border-red-500" : ""
+                  }`}
+                  placeholder="Enter description"
+                  name="description"
+                  value={editedUser.description}
+                  onChange={handleChange}
+                />
+                {errors.description && (
+                  <span className="text-red-500 text-xs mt-1">{errors.description}</span>
+                )}
+              </div>
             ) : (
               <p className="mt-2 text-sm sm:text-base">{user.description}</p>
             )}
