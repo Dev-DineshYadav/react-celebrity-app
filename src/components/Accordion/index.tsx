@@ -100,7 +100,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
     <>
       <div className="w-full border rounded-lg overflow-hidden">
         <div className="flex items-center p-2 sm:p-4 bg-white">
-          <figure className="w-8 h-8 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0">
+          <figure className="w-8 h-8 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 color-border">
             <img
               src={user.picture ? user.picture : Avatar}
               alt={user.first}
