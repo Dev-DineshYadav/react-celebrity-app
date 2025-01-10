@@ -129,7 +129,7 @@ To build the project for production, use the following command:
 npm run build
 ```
 
-This will create an optimized production build in the `.next` directory. To start the production server, use:
+This will create an optimized production build. To start the production server, use:
 
 ```bash
 npm start
