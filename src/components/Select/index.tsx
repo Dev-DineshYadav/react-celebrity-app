@@ -26,14 +26,25 @@ const Select: React.FC<SelectProps> = ({
   options,
   ...props
 }) => {
-  // Generate a unique ID if none provided
   const selectId = id || `select-${Math.random().toString(36).substr(2, 9)}`;
 
   const sizeStyles = {
-    sm: 'px-2 py-1 text-sm',
-    md: 'px-3 py-2 text-base',
-    lg: 'px-4 py-3 text-lg'
+    sm: 'h-8 text-sm bg-[length:30px_30px]',
+    md: 'h-10 text-base bg-[length:34px_34px]',
+    lg: 'h-12 text-lg bg-[length:38px_38px]'
   };
+
+  const paddingStyles = {
+    sm: 'pl-2 pr-8',
+    md: 'pl-3 pr-10',
+    lg: 'pl-4 pr-12'
+  };
+
+  const chevronSvg = encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 25" fill="none" stroke="#e5e7eb" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  `);
 
   return (
     <div className="w-full">
@@ -57,10 +68,10 @@ const Select: React.FC<SelectProps> = ({
         disabled={disabled}
         required={required}
         className={`
-          border rounded-xl
-          appearance-none
-          bg-white
+          w-full
+          border rounded-lg
           ${sizeStyles[size]}
+          ${paddingStyles[size]}
           ${disabled ? 'bg-gray-50 cursor-not-allowed opacity-50' : 'bg-white'}
           ${error 
             ? 'border-red-500 focus:ring-red-500 focus:border-red-500' 
@@ -68,8 +79,15 @@ const Select: React.FC<SelectProps> = ({
           }
           focus:outline-none focus:ring-2 focus:ring-opacity-50
           transition-colors duration-200
+          appearance-none
+          bg-no-repeat
+          bg-right
           ${className}
         `}
+        style={{
+          backgroundImage: `url("data:image/svg+xml,${chevronSvg}")`,
+          backgroundPosition: 'right 0.5rem center'
+        }}
         aria-invalid={error ? "true" : "false"}
         aria-describedby={error ? `${selectId}-error` : undefined}
         {...props}
@@ -81,7 +99,6 @@ const Select: React.FC<SelectProps> = ({
           </option>
         ))}
       </select>
-      
       {error && (
         <p 
           id={`${selectId}-error`}
