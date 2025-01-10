@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import { BsChevronDown } from "react-icons/bs";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
 import { calculateAge } from "../../utils/getBirthDate";
@@ -98,9 +98,9 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
 
   return (
     <>
-      <div className="w-full border rounded-lg overflow-hidden">
-        <div className="flex items-center p-2 sm:p-4 bg-white">
-          <figure className="w-8 h-8 sm:w-12 sm:h-12 rounded-full overflow-hidden flex-shrink-0 color-border">
+      <div className="w-full color-border rounded-lg overflow-hidden">
+        <div className="flex justify-between items-center py-3 px-6 bg-white">
+          <figure className="w-8 h-8 sm:w-12 sm:h-12 rounded-full overflow-hidden color-border">
             <img
               src={user.picture ? user.picture : Avatar}
               alt={user.first}
@@ -119,13 +119,13 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
               />
             </div>
           ) : (
-            <h4 className="flex-grow mx-2 sm:mx-4 font-bold capitalize text-sm sm:text-base truncate">
+            <h4 className="basis-[75%] font-semibold capitalize text-base sm:text-base truncate">
               {user.first} {user.last}
             </h4>
           )}
           <button
             onClick={handleToggle}
-            className={`p-1 sm:p-2 transition-transform duration-300 flex-shrink-0 ${
+            className={`p-1 sm:p-2 transition-transform duration-300 ${
               isOpen ? "rotate-180" : ""
             } ${
               isEditing || isAnyItemEditing
@@ -136,7 +136,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             aria-controls={`description-${user.id}`}
             disabled={isEditing || isAnyItemEditing}
           >
-            <FaChevronDown className="w-3 h-3 sm:w-4 sm:h-4" />
+            <BsChevronDown className="w-3 h-3 sm:w-4 sm:h-4" color="#87878a" />
           </button>
         </div>
 

@@ -96,7 +96,7 @@ const ListView = () => {
         <ul className="list_of_users">
           {filteredUsers.length > 0 ? (
             filteredUsers.map((user) => (
-              <li className="w-full rounded-xl p-4 color-border" key={user?.id}>
+              <li key={user?.id}>
                 <AccordionItem
                   user={user}
                   isOpen={openAccordionId === user.id}
