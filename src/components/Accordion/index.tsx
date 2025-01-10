@@ -308,14 +308,14 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             )}
           </div>
 
-          <div className="flex justify-end items-center mt-4 sm:mt-5 space-x-3 sm:space-x-5">
+          <div className="flex justify-end items-center mt-4 sm:mt-5 space-x-2 sm:space-x-2">
             {isEditing ? (
               <>
                 <button onClick={handleCancel}>
                   <RxCrossCircled color={"#ff3703"} size={20} className="sm:w-6 sm:h-6" />
                 </button>
                 <button onClick={handleSave}>
-                  <IoCheckmarkCircleOutline color={"#37b000"} size={20} className="sm:w-6 sm:h-6" />
+                  <IoCheckmarkCircleOutline color={"#37b000"} size={22} className="sm:w-6 sm:h-6" />
                 </button>
               </>
             ) : (
