@@ -207,7 +207,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           <ul className="flex flex-col md:flex-row md:items-center gap-3 md:gap-0 mb-4 md:mb-5">
             <li className="md:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71] text-sm mb-1">age</span>
+                <span className="capitalize text-[#6e6e71] text-base mb-1">age</span>
                 {isEditing ? (
                   <div>
                     <Input
@@ -231,7 +231,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             </li>
             <li className="md:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71] text-sm mb-1">gender</span>
+                <span className="capitalize text-[#6e6e71] text-base mb-1">gender</span>
                 {isEditing ? (
                   <div>
                     <Select
@@ -262,7 +262,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             </li>
             <li className="md:basis-1/3">
               <div className="flex flex-col">
-                <span className="capitalize text-[#6e6e71] text-sm mb-1">country</span>
+                <span className="capitalize text-[#6e6e71] text-base mb-1">country</span>
                 {isEditing ? (
                   <div>
                     <Input

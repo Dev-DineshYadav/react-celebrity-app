@@ -70,6 +70,7 @@ const ListView = () => {
   }, [formData.search, users]);
   
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setOpenAccordionId(null)
     setFormData({
       ...formData,
       [e.target.id]: e.target.value,
