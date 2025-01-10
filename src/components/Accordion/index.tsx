@@ -308,7 +308,7 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             )}
           </div>
 
-          <div className="flex justify-end items-center mt-4 sm:mt-5 space-x-2 sm:space-x-2">
+          <div className="flex justify-end items-center mt-4 sm:mt-5 space-x-3">
             {isEditing ? (
               <>
                 <button onClick={handleCancel}>
