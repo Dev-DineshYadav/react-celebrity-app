@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import DummyData from '../../assets/dummyData/celebrities.json';
-import Input from "../Inputs";
+import {Input} from "../Inputs";
 import AccordionItem from "../Accordion";
 import { User } from "../../types";
 

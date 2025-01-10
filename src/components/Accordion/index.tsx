@@ -8,7 +8,7 @@ import { RxCrossCircled } from "react-icons/rx";
 import { IoCheckmarkCircleOutline } from "react-icons/io5";
 import Avatar from "../../assets/images/avatar.png";
 import { AccordionItemProps } from "../../types";
-import Input from "../Inputs";
+import {Input, Textarea} from "../Inputs";
 import Select from "../Select";
 
 const AccordionItem: React.FC<AccordionItemProps> = ({
@@ -199,13 +199,15 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
           <div>
             <span className="text-[#6e6e71] capitalize">description</span>
             {isEditing ? (
-              <textarea
-                name="description"
-                value={editedUser.description}
-                onChange={handleChange}
-                className="w-full mt-2 px-2 py-1 border rounded"
-                rows={3}
-              />
+                <Textarea
+                  className="w-full mt-2 px-2 py-1 border rounded"
+                  placeholder="Enter description"
+                  value={editedUser.description}
+                  rows={4}
+                  maxRows={8}
+                  onChange={handleChange}
+                  size="md"
+                />
             ) : (
               <p className="mt-2">{user.description}</p>
             )}

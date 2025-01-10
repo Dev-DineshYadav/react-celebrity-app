@@ -19,3 +19,11 @@ export interface AccordionItemProps {
   onEditingChange: (isEditing: boolean) => void;
   isAnyItemEditing?: boolean
 }
+
+export interface BaseFieldProps {
+  label?: string;
+  error?: string;
+  className?: string;
+  required?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+}
