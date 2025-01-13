@@ -4,8 +4,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { FiEdit2 } from "react-icons/fi";
 import { calculateAge } from "../../utils/index.js";
 import DeleteModal from "../Modal";
-import { RxCrossCircled } from "react-icons/rx";
-import { IoCheckmarkCircleOutline } from "react-icons/io5";
+import { RxCheckCircled, RxCrossCircled } from "react-icons/rx";
 import Avatar from "../../assets/images/avatar.png";
 import { AccordionItemProps } from "../../types";
 import { Input, Textarea } from "../Inputs";
@@ -319,10 +318,10 @@ const AccordionItem: React.FC<AccordionItemProps> = ({
             {isEditing ? (
               <>
                 <button onClick={handleCancel}>
-                  <RxCrossCircled color={"#ff3703"} size={20} className="sm:w-6 sm:h-6" />
+                  <RxCrossCircled color={"#ff3703"} size={23} className="sm:w-6 sm:h-6" />
                 </button>
                 <button onClick={handleSave}>
-                  <IoCheckmarkCircleOutline color={"#37b000"} size={22} className="sm:w-6 sm:h-6" />
+                  <RxCheckCircled  color={"#37b000"} size={23} className="sm:w-6 sm:h-6" />
                 </button>
               </>
             ) : (
